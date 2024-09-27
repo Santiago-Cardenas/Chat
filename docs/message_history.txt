@@ -1,0 +1,6 @@
+Usuario a se ha unido al chat.
+Usuario aa se ha unido al chat.
+[Mensaje de voz de a a aa]
+[Mensaje de voz de a a aa]
+Usuario aa ha salido del chat.
+Usuario a ha salido del chat.

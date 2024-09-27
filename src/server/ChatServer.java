@@ -6,13 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class Server {
+public class ChatServer {
     private static List<PrintWriter> clients = Collections.synchronizedList(new ArrayList<>());
     private static List<String> usernames = Collections.synchronizedList(new ArrayList<>());
+    private static Map<String, ChatGroup> groups = Collections.synchronizedMap(new HashMap<>());
+    private static MessageHistory messageHistory = new MessageHistory();
     private static ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) throws IOException {
@@ -27,7 +31,7 @@ public class Server {
                 PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
 
                 // Ejecutar el manejador del cliente
-                threadPool.execute(new ClientHandler(clientSocket, out, clients, usernames));
+                threadPool.execute(new ClientHandler(clientSocket, out, clients, usernames, groups, messageHistory));
             }
         }
     }
@@ -39,5 +43,9 @@ public class Server {
                 client.println(message);
             }
         }
+    }
+
+    public static void saveMessage(String message) {
+        messageHistory.addMessage(message);
     }
 }
